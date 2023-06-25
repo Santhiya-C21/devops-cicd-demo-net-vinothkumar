@@ -14,6 +14,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
+          sudo su - root 
           dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
       }
@@ -25,6 +26,7 @@ pipeline {
                    * First, the incremental build number from Jenkins
                    * Second, the 'latest' tag.
                    * Pushing multiple tags is cheap, as all the layers are reused. */
+          sudo su - root
           docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
               dockerImage.push("${env.BUILD_NUMBER}")
               dockerImage.push("latest")
